@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Dashboard</title>
+
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+<style>
+body { background:#0b0b0b; color:white; font-family:sans-serif; }
+.sidebar { position:absolute; left:0; top:0; width:250px; height:100vh; background:#111; padding:10px; }
+.main { margin-left:260px; padding:10px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+const { useState, useEffect } = React;
+
+const API = "https://YOUR-BACKEND";
+
+function getToken(){
+  return new URLSearchParams(window.location.search).get("token");
+}
+
+function App(){
+  const [data,setData]=useState([]);
+
+  useEffect(()=>{
+    const token = getToken();
+    fetch(API+"/regions?token="+token)
+    .then(r=>r.json())
+    .then(setData);
+  },[]);
+
+  return React.createElement("div",null,
+    data.map(r=>React.createElement("div",null,
+      r.region+" risk:"+r.risk
+    ))
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+</script>
+</body>
+</html>
